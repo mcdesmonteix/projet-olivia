@@ -4,11 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌍 Projet Olivia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
 
-  <!-- Écran de connexion -->
+  <!-- Fond dégradé thème Glass -->
+  <div id="glass-bg">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+
+  <!-- ── Écran de connexion ── -->
   <div id="screen-select">
     <div class="select-card">
       <div class="app-logo">🌍</div>
@@ -34,14 +44,36 @@
       </div>
 
       <button class="btn-join" onclick="connectUser()">Rejoindre →</button>
+
+      <div class="theme-picker-label">Choisir un thème</div>
+      <div class="theme-picker">
+        <div class="theme-swatch" data-theme="glass"   data-label="Glass"    onclick="setTheme('glass')"   title="Glassmorphism"></div>
+        <div class="theme-swatch" data-theme="dark"    data-label="Dark"     onclick="setTheme('dark')"    title="Dark mode"></div>
+        <div class="theme-swatch" data-theme="minimal" data-label="Minimal"  onclick="setTheme('minimal')" title="Minimaliste"></div>
+        <div class="theme-swatch" data-theme="vivid"   data-label="Vivid"    onclick="setTheme('vivid')"   title="Coloré"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Écran de conversation -->
+  <!-- ── Écran de conversation ── -->
   <div id="screen-chat" class="hidden">
     <header>
-      <div class="header-title">🌍 Projet Olivia</div>
-      <div id="header-users" class="header-users"></div>
+      <div class="header-left">
+        <div class="header-logo-box">🌍</div>
+        <div class="header-title">Projet Olivia</div>
+      </div>
+      <div class="header-right">
+        <div id="header-users" class="header-users"></div>
+        <div style="position:relative;">
+          <button id="btn-theme" onclick="toggleThemeDropdown()" title="Changer de thème">🎨</button>
+          <div class="theme-dropdown hidden" id="theme-dropdown">
+            <div class="theme-swatch" data-theme="glass"   onclick="setTheme('glass');closeThemeDropdown()"   title="Glass"></div>
+            <div class="theme-swatch" data-theme="dark"    onclick="setTheme('dark');closeThemeDropdown()"    title="Dark"></div>
+            <div class="theme-swatch" data-theme="minimal" onclick="setTheme('minimal');closeThemeDropdown()" title="Minimal"></div>
+            <div class="theme-swatch" data-theme="vivid"   onclick="setTheme('vivid');closeThemeDropdown()"   title="Vivid"></div>
+          </div>
+        </div>
+      </div>
     </header>
 
     <div id="messages"></div>
@@ -50,19 +82,13 @@
       <div id="recording-indicator" class="hidden">🎙️ Enregistrement…</div>
       <div id="vad-listening" class="hidden">👂 En écoute…</div>
       <div class="footer-controls">
-        <button id="btn-vad" onclick="toggleVAD()" title="Activer la détection automatique">
-          🤖
-        </button>
+        <button id="btn-vad" onclick="toggleVAD()" title="Détection automatique de la voix">🤖</button>
         <button id="btn-mic"
           onmousedown="startRecording()"
           onmouseup="stopRecording()"
           ontouchstart="startRecording()"
-          ontouchend="stopRecording()">
-          🎤
-        </button>
-        <button id="btn-tts" onclick="toggleTTS()" title="Activer/désactiver la lecture vocale">
-          🔊
-        </button>
+          ontouchend="stopRecording()">🎤</button>
+        <button id="btn-tts" onclick="toggleTTS()" title="Lecture vocale">🔊</button>
       </div>
       <div class="footer-hint">🤖 Auto · 🎤 Maintenir pour parler · 🔊 Lecture vocale</div>
     </footer>

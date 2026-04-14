@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design 4 — Vivid & Coloré</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fff9f0;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 14px 20px;
+      background: white;
+      border-bottom: 2px solid #f0e8ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #ff6b9d, #ffa500);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+    }
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #7c4dff, #ff6b9d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-users { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* Chaque langue a sa couleur */
+    .user-pill[data-lang="fr"] { background: #e8f4fd; color: #1a6fb5; border: 2px solid #b3d9f5; }
+    .user-pill[data-lang="es"] { background: #fff3e0; color: #c95c00; border: 2px solid #ffcc80; }
+    .user-pill[data-lang="en"] { background: #f3e5f5; color: #7b1fa2; border: 2px solid #e1bee7; }
+    .user-pill[data-lang="zh"] { background: #ffebee; color: #c62828; border: 2px solid #ffcdd2; }
+    .user-pill[data-lang="ar"] { background: #e8f5e9; color: #2e7d32; border: 2px solid #c8e6c9; }
+    .user-pill[data-lang="ru"] { background: #e3f2fd; color: #1565c0; border: 2px solid #bbdefb; }
+    .user-pill[data-lang="it"] { background: #e8f5e9; color: #1b5e20; border: 2px solid #a5d6a7; }
+    .user-pill[data-lang="pt"] { background: #f9fbe7; color: #558b2f; border: 2px solid #dce775; }
+    .user-pill.me { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+    .user-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 5px #22c55e; }
+
+    /* ── Messages ── */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #fff9f0;
+    }
+
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-thumb { background: #f0d9ff; border-radius: 4px; }
+
+    .msg-system {
+      text-align: center;
+      font-size: 0.73rem;
+      color: #c4b0d0;
+      padding: 2px 0;
+      font-weight: 600;
+    }
+
+    .message { display: flex; align-items: flex-end; gap: 8px; max-width: 80%; }
+    .message.me { align-self: flex-end; flex-direction: row-reverse; }
+    .message.other { align-self: flex-start; }
+
+    .msg-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    /* Avatar couleur par langue */
+    .avatar-fr { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
+    .avatar-es { background: linear-gradient(135deg, #ffb74d, #fb8c00); }
+    .avatar-en { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
+    .avatar-zh { background: linear-gradient(135deg, #ef5350, #c62828); }
+    .avatar-ar { background: linear-gradient(135deg, #66bb6a, #388e3c); }
+    .avatar-ru { background: linear-gradient(135deg, #5c9ce5, #1565c0); }
+    .avatar-it { background: linear-gradient(135deg, #4db6ac, #00897b); }
+    .avatar-pt { background: linear-gradient(135deg, #9ccc65, #558b2f); }
+
+    .msg-body { display: flex; flex-direction: column; gap: 4px; }
+    .message.me .msg-body { align-items: flex-end; }
+    .message.other .msg-body { align-items: flex-start; }
+
+    .msg-sender { font-size: 0.72rem; color: #b0a0c0; padding: 0 4px; font-weight: 700; }
+
+    .msg-bubble {
+      padding: 11px 16px;
+      border-radius: 20px;
+      font-size: 0.93rem;
+      line-height: 1.5;
+      font-weight: 500;
+      position: relative;
+    }
+
+    /* Bulles colorées selon la langue de l'auteur */
+    .message.me .msg-bubble {
+      background: linear-gradient(135deg, #7c4dff, #e040fb);
+      color: white;
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 4px 14px rgba(124,77,255,0.3);
+    }
+
+    .message.other .msg-bubble {
+      background: white;
+      color: #2d2d2d;
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      border: 1.5px solid #f0e8ff;
+    }
+
+    .msg-translation {
+      font-size: 0.78rem;
+      color: #b0a0c0;
+      font-style: italic;
+      padding: 0 4px;
+      font-weight: 600;
+    }
+    .msg-translation::before { content: "✨ "; }
+
+    .msg-meta { font-size: 0.68rem; color: #c4b0d0; padding: 0 4px; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 14px 20px 30px;
+      background: white;
+      border-top: 2px solid #f0e8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .footer-status { font-size: 0.78rem; color: #c4b0d0; height: 18px; font-weight: 600; }
+    .footer-status.recording { color: #ff5c8a; animation: pulse 1s infinite; }
+    .footer-status.listening { color: #22c55e; animation: pulse 2s infinite; }
+
+    .footer-controls { display: flex; align-items: center; gap: 14px; }
+
+    .btn-sm {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: #f8f0ff;
+      border: 2px solid #e8d5ff;
+      color: #9b6fcc;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .btn-sm:hover { background: #edd5ff; border-color: #c980ff; }
+
+    .btn-sm.active {
+      background: #e8fdf0;
+      border-color: #86efac;
+      color: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
+    }
+
+    .btn-lg {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b9d, #ffa500);
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      box-shadow: 0 6px 22px rgba(255,107,157,0.4);
+    }
+
+    .btn-lg:active {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      transform: scale(0.94);
+      box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+    }
+
+    .footer-hint { font-size: 0.72rem; color: #c4b0d0; font-weight: 600; }
+
+    /* ── Connexion preview ── */
+    .connect-preview {
+      position: fixed; bottom: 20px; right: 20px; z-index: 100;
+      background: white;
+      border: 2px solid #f0e8ff;
+      border-radius: 24px;
+      padding: 26px 22px;
+      width: 265px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 12px 36px rgba(124,77,255,0.12);
+    }
+
+    .connect-preview .logo {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #ff6b9d, #ffa500);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 12px;
+      box-shadow: 0 6px 18px rgba(255,107,157,0.3);
+    }
+
+    .connect-preview h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #7c4dff, #ff6b9d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .connect-preview p { font-size: 0.75rem; color: #b0a0c0; margin-bottom: 16px; font-weight: 600; }
+
+    .connect-preview input,
+    .connect-preview select {
+      width: 100%;
+      padding: 10px 13px;
+      background: #fdf8ff;
+      border: 2px solid #e8d5ff;
+      border-radius: 12px;
+      color: #2d2d2d;
+      font-size: 0.83rem;
+      margin-bottom: 8px;
+      outline: none;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+    }
+
+    .connect-preview input::placeholder { color: #c4b0d0; }
+
+    .btn-join-preview {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #7c4dff, #e040fb);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-family: 'Nunito', sans-serif;
+      box-shadow: 0 4px 16px rgba(124,77,255,0.3);
+      letter-spacing: 0.3px;
+    }
+
+    .close-hint { font-size: 0.65rem; color: #c4b0d0; margin-top: 8px; font-weight: 600; }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="header-brand">
+      <div class="header-logo">🌍</div>
+      <div class="header-title">Projet Olivia</div>
+    </div>
+    <div class="header-users">
+      <div class="user-pill me" data-lang="fr"><div class="user-dot"></div> 🇫🇷 Louise</div>
+      <div class="user-pill" data-lang="es"><div class="user-dot"></div> 🇪🇸 Nuria</div>
+    </div>
+  </header>
+
+  <div id="messages">
+    <div class="msg-system">✨ Connexion établie · 14:32</div>
+    <div class="msg-system">🇫🇷 Louise est connecté(e) · 🇪🇸 Nuria est connecté(e)</div>
+
+    <div class="message other">
+      <div class="msg-avatar avatar-es">N</div>
+      <div class="msg-body">
+        <div class="msg-sender">🇪🇸 Nuria</div>
+        <div class="msg-bubble">Hola, ¿qué tal?</div>
+        <div class="msg-translation">Bonjour. Ça va ?</div>
+        <div class="msg-meta">14:33</div>
+      </div>
+    </div>
+
+    <div class="message me">
+      <div class="msg-avatar avatar-fr">L</div>
+      <div class="msg-body">
+        <div class="msg-sender">🇫🇷 Louise</div>
+        <div class="msg-bubble">Très bien merci ! Et toi, comment ça se passe là-bas ?</div>
+        <div class="msg-translation">¡Muy bien, gracias! ¿Y tú, cómo te va por allá?</div>
+        <div class="msg-meta">14:33</div>
+      </div>
+    </div>
+
+    <div class="message other">
+      <div class="msg-avatar avatar-es">N</div>
+      <div class="msg-body">
+        <div class="msg-sender">🇪🇸 Nuria</div>
+        <div class="msg-bubble">Todo bien, hace mucho calor aquí en Madrid.</div>
+        <div class="msg-translation">Tout va bien, il fait très chaud ici à Madrid.</div>
+        <div class="msg-meta">14:34</div>
+      </div>
+    </div>
+
+    <div class="message me">
+      <div class="msg-avatar avatar-fr">L</div>
+      <div class="msg-body">
+        <div class="msg-sender">🇫🇷 Louise</div>
+        <div class="msg-bubble">Chanceux ! Il pleut à Paris depuis trois jours.</div>
+        <div class="msg-translation">¡Qué suerte! Lleva tres días lloviendo en París.</div>
+        <div class="msg-meta">14:34</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-status">🎙️ Maintenir pour parler</div>
+    <div class="footer-controls">
+      <button class="btn-sm" title="Mode auto">🤖</button>
+      <button class="btn-lg">🎤</button>
+      <button class="btn-sm active" title="Lecture vocale">🔊</button>
+    </div>
+    <div class="footer-hint">🤖 Auto · 🎤 Push-to-talk · 🔊 Lecture vocale</div>
+  </footer>
+</div>
+
+<div class="connect-preview" onclick="this.style.display='none'">
+  <div class="logo">🌍</div>
+  <h3>Projet Olivia</h3>
+  <p>Entre ton prénom et ta langue</p>
+  <input placeholder="Ton prénom" />
+  <select><option>🇫🇷 Français</option></select>
+  <button class="btn-join-preview">Rejoindre →</button>
+  <div class="close-hint">Cliquer pour fermer</div>
+</div>
+</body>
+</html>

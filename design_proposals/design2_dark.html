@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design 2 — Dark Mode</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21253a;
+      --border: #2d3147;
+      --accent: #7c6fff;
+      --accent2: #00e5a0;
+      --text: #e8eaf6;
+      --text-muted: #5c6080;
+      --text-dim: #8890b0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      height: 100dvh;
+      overflow: hidden;
+      color: var(--text);
+    }
+
+    /* ── Layout ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 14px 20px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--accent), #b06fff);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 14px rgba(124,111,255,0.35);
+    }
+
+    .header-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .header-subtitle { font-size: 0.7rem; color: var(--text-muted); }
+
+    .header-users { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .user-pill.me {
+      background: rgba(124,111,255,0.12);
+      border-color: rgba(124,111,255,0.35);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .user-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+      box-shadow: 0 0 6px var(--accent2);
+    }
+
+    /* ── Messages ── */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg);
+    }
+
+    #messages::-webkit-scrollbar { width: 4px; }
+    #messages::-webkit-scrollbar-track { background: transparent; }
+    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg-system {
+      text-align: center;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      padding: 2px 0;
+    }
+
+    .message { display: flex; flex-direction: column; max-width: 76%; gap: 5px; }
+    .message.me { align-self: flex-end; align-items: flex-end; }
+    .message.other { align-self: flex-start; align-items: flex-start; }
+
+    .msg-sender { font-size: 0.72rem; color: var(--text-muted); padding: 0 4px; font-weight: 500; }
+
+    .msg-bubble {
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.93rem;
+      line-height: 1.5;
+    }
+
+    .message.me .msg-bubble {
+      background: var(--accent);
+      color: white;
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 4px 16px rgba(124,111,255,0.3);
+    }
+
+    .message.other .msg-bubble {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 5px;
+    }
+
+    .msg-translation {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 0 4px;
+    }
+    .msg-translation::before { content: "→ "; color: var(--accent); }
+
+    .msg-meta { font-size: 0.68rem; color: var(--text-muted); padding: 0 4px; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 14px 20px 28px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .footer-status {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      height: 18px;
+    }
+
+    .footer-status.recording { color: #ff5c5c; animation: pulse 1s infinite; }
+    .footer-status.listening { color: var(--accent2); animation: pulse 2s infinite; }
+
+    .footer-controls { display: flex; align-items: center; gap: 16px; }
+
+    .btn-sm {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-sm.active {
+      background: rgba(0,229,160,0.1);
+      border-color: var(--accent2);
+      color: var(--accent2);
+      box-shadow: 0 0 0 3px rgba(0,229,160,0.12);
+    }
+
+    .btn-lg {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #b06fff);
+      border: none;
+      color: white;
+      font-size: 1.7rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      box-shadow: 0 6px 24px rgba(124,111,255,0.4);
+    }
+
+    .btn-lg:active {
+      background: linear-gradient(135deg, #ff4757, #ff6b6b);
+      box-shadow: 0 4px 16px rgba(255,71,87,0.4);
+      transform: scale(0.95);
+    }
+
+    .footer-hint { font-size: 0.7rem; color: var(--text-muted); }
+
+    /* ── Connexion ── */
+    .connect-preview {
+      position: fixed; bottom: 20px; right: 20px; z-index: 100;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      width: 260px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+
+    .connect-preview .logo {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--accent), #b06fff);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 12px;
+      box-shadow: 0 6px 20px rgba(124,111,255,0.4);
+    }
+
+    .connect-preview h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+    .connect-preview p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    .connect-preview input,
+    .connect-preview select {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .connect-preview input::placeholder { color: var(--text-muted); }
+    .connect-preview select option { background: var(--surface2); }
+
+    .btn-join-preview {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--accent), #b06fff);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 14px rgba(124,111,255,0.3);
+    }
+
+    .close-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="header-brand">
+      <div class="header-logo">🌍</div>
+      <div>
+        <div class="header-title">Projet Olivia</div>
+        <div class="header-subtitle">Traduction en temps réel</div>
+      </div>
+    </div>
+    <div class="header-users">
+      <div class="user-pill me"><div class="user-dot"></div> 🇫🇷 Louise</div>
+      <div class="user-pill"><div class="user-dot"></div> 🇪🇸 Nuria</div>
+    </div>
+  </header>
+
+  <div id="messages">
+    <div class="msg-system">Connexion établie · 14:32</div>
+    <div class="msg-system">🇫🇷 Louise est connecté(e)</div>
+    <div class="msg-system">🇪🇸 Nuria est connecté(e)</div>
+
+    <div class="message other">
+      <div class="msg-sender">🇪🇸 Nuria</div>
+      <div class="msg-bubble">Hola, ¿qué tal?</div>
+      <div class="msg-translation">Bonjour. Ça va ?</div>
+      <div class="msg-meta">14:33</div>
+    </div>
+
+    <div class="message me">
+      <div class="msg-sender">🇫🇷 Louise</div>
+      <div class="msg-bubble">Très bien merci ! Et toi, comment ça se passe là-bas ?</div>
+      <div class="msg-translation">¡Muy bien, gracias! ¿Y tú, cómo te va por allá?</div>
+      <div class="msg-meta">14:33</div>
+    </div>
+
+    <div class="message other">
+      <div class="msg-sender">🇪🇸 Nuria</div>
+      <div class="msg-bubble">Todo bien, hace mucho calor aquí en Madrid.</div>
+      <div class="msg-translation">Tout va bien, il fait très chaud ici à Madrid.</div>
+      <div class="msg-meta">14:34</div>
+    </div>
+
+    <div class="message me">
+      <div class="msg-sender">🇫🇷 Louise</div>
+      <div class="msg-bubble">Chanceux ! Il pleut à Paris depuis trois jours.</div>
+      <div class="msg-translation">¡Qué suerte! Lleva tres días lloviendo en París.</div>
+      <div class="msg-meta">14:34</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-status">🎙️ Maintenir pour parler</div>
+    <div class="footer-controls">
+      <button class="btn-sm" title="Mode auto">🤖</button>
+      <button class="btn-lg">🎤</button>
+      <button class="btn-sm active" title="Lecture vocale">🔊</button>
+    </div>
+    <div class="footer-hint">🤖 Auto · 🎤 Push-to-talk · 🔊 Lecture vocale</div>
+  </footer>
+</div>
+
+<div class="connect-preview" onclick="this.style.display='none'">
+  <div class="logo">🌍</div>
+  <h3>Projet Olivia</h3>
+  <p>Entre ton prénom et ta langue</p>
+  <input placeholder="Ton prénom" />
+  <select><option>🇫🇷 Français</option></select>
+  <button class="btn-join-preview">Rejoindre →</button>
+  <div class="close-hint">Cliquer pour fermer</div>
+</div>
+</body>
+</html>

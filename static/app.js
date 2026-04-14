@@ -1,3 +1,31 @@
+// ── Thème ──
+
+function setTheme(name) {
+  document.body.setAttribute('data-theme', name);
+  localStorage.setItem('olivia-theme', name);
+  document.querySelectorAll('.theme-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.theme === name);
+  });
+}
+
+function toggleThemeDropdown() {
+  document.getElementById('theme-dropdown').classList.toggle('hidden');
+}
+
+function closeThemeDropdown() {
+  document.getElementById('theme-dropdown').classList.add('hidden');
+}
+
+// Ferme le dropdown en cliquant ailleurs
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#btn-theme') && !e.target.closest('#theme-dropdown')) {
+    closeThemeDropdown();
+  }
+});
+
+// Applique le thème sauvegardé (défaut : glass)
+setTheme(localStorage.getItem('olivia-theme') || 'glass');
+
 // ── Configuration des langues ──
 const LANGUAGES = {
   fr: { name: "Français",  flag: "🇫🇷", ttsLang: "fr-FR" },
