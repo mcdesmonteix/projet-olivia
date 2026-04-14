@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet Olivia 💬</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Écran de sélection -->
+  <div id="screen-select">
+    <div class="select-card">
+      <h1>Projet Olivia 💬</h1>
+      <p>Qui es-tu ?</p>
+      <div class="select-buttons">
+        <button class="btn-user" onclick="connect('louise')">
+          🇫🇷<br/>Louise
+        </button>
+        <button class="btn-user" onclick="connect('olivia')">
+          🇺🇸<br/>Olivia
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Écran de conversation -->
+  <div id="screen-chat" class="hidden">
+    <header>
+      <div class="header-title">💬 Projet Olivia</div>
+      <div class="header-status">
+        <span id="status-louise" class="status-dot offline" title="Louise"></span>
+        <span class="status-name">Louise</span>
+        <span id="status-olivia" class="status-dot offline" title="Olivia" style="margin-left:12px"></span>
+        <span class="status-name">Olivia</span>
+      </div>
+    </header>
+
+    <div id="messages"></div>
+
+    <footer>
+      <div id="recording-indicator" class="hidden">🎙️ Enregistrement…</div>
+      <button id="btn-mic"
+        onmousedown="startRecording()"
+        onmouseup="stopRecording()"
+        ontouchstart="startRecording()"
+        ontouchend="stopRecording()">
+        🎤
+      </button>
+      <div class="footer-hint">Maintenir pour parler</div>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

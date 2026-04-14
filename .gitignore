@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Certificats SSL (générés localement par mkcert)
+*.pem
+*-key.pem
+
+# macOS
+.DS_Store
+
+# Fichiers de test
+test_audio/
+
+# IDE
+.claude/
