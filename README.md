@@ -147,9 +147,9 @@ Terminal 1 :
 Terminal 2 :
 ```bat
 ipconfig
-REM Repérer l'IP locale (ex: 192.168.1.34)
-mkcert 192.168.1.34 localhost 127.0.0.1
-.venv\Scripts\uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-certfile 192.168.1.34+2.pem --ssl-keyfile 192.168.1.34+2-key.pem
+REM Repérer l'IP locale (ex: 192.168.X.X)
+mkcert 192.168.X.X localhost 127.0.0.1
+.venv\Scripts\uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-certfile 192.168.X.X+2.pem --ssl-keyfile 192.168.X.X+2-key.pem
 ```
 
 **Comment se connecter :**
@@ -157,8 +157,8 @@ mkcert 192.168.1.34 localhost 127.0.0.1
 | Appareil | Adresse à ouvrir |
 |----------|-----------------|
 | L'ordinateur serveur | `https://localhost:8000` |
-| Autre ordinateur (même Wi-Fi) | `https://192.168.1.34:8000` *(remplacer par l'IP affichée)* |
-| Téléphone (même Wi-Fi) | `https://192.168.1.34:8000` *(idem)* |
+| Autre ordinateur (même Wi-Fi) | `https://192.168.X.X:8000` *(remplacer par ton IP locale)* |
+| Téléphone (même Wi-Fi) | `https://192.168.X.X:8000` *(idem)* |
 
 > La première fois, le navigateur affiche un avertissement SSL (certificat auto-signé).  
 > Cliquer sur **"Paramètres avancés"** → **"Continuer quand même"**.  
