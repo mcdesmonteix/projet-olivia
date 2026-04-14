@@ -1,6 +1,4 @@
-import asyncio
 import base64
-import json
 import os
 import tempfile
 from datetime import datetime
@@ -20,17 +18,16 @@ print("Chargement du modèle Whisper...")
 model = WhisperModel("small", device="cpu", compute_type="int8")
 print("Modèle prêt !")
 
-# Clients connectés : { "louise": websocket, "olivia": websocket }
-clients: Dict[str, WebSocket] = {}
+# Utilisateurs connectés : { session_id: { "ws", "name", "lang" } }
+users: Dict[str, dict] = {}
 
 
-async def transcribe(audio_bytes: bytes) -> str:
-    suffix = ".webm"
-    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as f:
+async def transcribe(audio_bytes: bytes, lang: str) -> str:
+    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
         f.write(audio_bytes)
         tmp_path = f.name
     try:
-        segments, info = model.transcribe(tmp_path)
+        segments, info = model.transcribe(tmp_path, language=lang)
         text = " ".join(seg.text.strip() for seg in segments)
         print(f"  Transcription ({info.language}) : {text}")
         return text
@@ -39,72 +36,112 @@ async def transcribe(audio_bytes: bytes) -> str:
 
 
 async def translate(text: str, source: str, target: str) -> str:
+    if source == target:
+        return text
     async with httpx.AsyncClient() as client:
         resp = await client.post(
             LIBRETRANSLATE_URL,
             json={"q": text, "source": source, "target": target, "api_key": ""},
             timeout=15.0,
         )
-        print(f"  LibreTranslate status: {resp.status_code}, body: {resp.text[:200]}")
         data = resp.json()
         result = data.get("translatedText") or data.get("error", "Traduction indisponible")
         print(f"  Traduction ({source}→{target}) : {result}")
         return result
 
 
-async def broadcast(message: dict):
+async def broadcast(message: dict, exclude: str = None):
     dead = []
-    for uid, ws in clients.items():
+    for sid, info in users.items():
+        if sid == exclude:
+            continue
         try:
-            await ws.send_json(message)
+            await info["ws"].send_json(message)
         except Exception:
-            dead.append(uid)
-    for uid in dead:
-        clients.pop(uid, None)
+            dead.append(sid)
+    for sid in dead:
+        users.pop(sid, None)
 
 
-@app.websocket("/ws/{user_id}")
-async def websocket_endpoint(websocket: WebSocket, user_id: str):
+async def broadcast_all(message: dict):
+    await broadcast(message, exclude=None)
+
+
+@app.websocket("/ws/{session_id}")
+async def websocket_endpoint(websocket: WebSocket, session_id: str):
     await websocket.accept()
-    clients[user_id] = websocket
-    print(f"\n[+] {user_id} connecté(e) ({len(clients)} en ligne)")
-
-    await broadcast({"type": "status", "user": user_id, "online": True})
+    users[session_id] = {"ws": websocket, "name": session_id, "lang": "fr"}
 
     try:
         while True:
             data = await websocket.receive_json()
 
-            if data["type"] == "audio":
-                audio_bytes = base64.b64decode(data["data"])
-                lang = data["lang"]  # "fr" ou "en"
-                target = "en" if lang == "fr" else "fr"
+            # ── Connexion avec nom et langue ──
+            if data["type"] == "join":
+                users[session_id]["name"] = data["name"]
+                users[session_id]["lang"] = data["lang"]
+                name = data["name"]
+                print(f"\n[+] {name} connecté(e) en {data['lang']} ({len(users)} en ligne)")
 
-                print(f"\n[{user_id}] Audio reçu ({len(audio_bytes)} octets)")
+                # Informer tout le monde de la connexion
+                await broadcast_all({
+                    "type": "status",
+                    "session_id": session_id,
+                    "name": name,
+                    "lang": data["lang"],
+                    "online": True,
+                })
+
+            # ── Audio reçu ──
+            elif data["type"] == "audio":
+                user = users[session_id]
+                lang = user["lang"]
+                name = user["name"]
+
+                audio_bytes = base64.b64decode(data["data"])
+                print(f"\n[{name}] Audio reçu ({len(audio_bytes)} octets)")
 
                 try:
-                    original = await transcribe(audio_bytes)
+                    original = await transcribe(audio_bytes, lang)
                     if not original.strip():
                         print("  (transcription vide, ignorée)")
                         continue
 
-                    translated = await translate(original, lang, target)
+                    # Traduire pour chaque autre utilisateur dans sa langue
+                    translations = {}
+                    for sid, other in users.items():
+                        if sid == session_id:
+                            continue
+                        target = other["lang"]
+                        if target not in translations:
+                            translations[target] = await translate(original, lang, target)
 
-                    await broadcast({
+                    # Diffuser le message avec toutes les traductions
+                    await broadcast_all({
                         "type": "message",
-                        "user": user_id,
+                        "session_id": session_id,
+                        "name": name,
+                        "lang": lang,
                         "original": original,
-                        "translated": translated,
+                        "translations": translations,
                         "timestamp": datetime.now().strftime("%H:%M"),
                     })
+
                 except Exception as e:
-                    print(f"  Erreur traitement audio : {e}")
+                    print(f"  Erreur : {e}")
                     await websocket.send_json({"type": "error", "message": str(e)})
 
     except WebSocketDisconnect:
-        clients.pop(user_id, None)
-        print(f"\n[-] {user_id} déconnecté(e)")
-        await broadcast({"type": "status", "user": user_id, "online": False})
+        user = users.pop(session_id, {})
+        name = user.get("name", session_id)
+        print(f"\n[-] {name} déconnecté(e)")
+        await broadcast_all({
+            "type": "status",
+            "session_id": session_id,
+            "name": name,
+            "lang": user.get("lang", ""),
+            "online": False,
+        })
 
 
 @app.get("/")

@@ -28,29 +28,48 @@ body {
   width: 90%;
 }
 
-.select-card h1 { font-size: 1.8rem; margin-bottom: 8px; }
-.select-card p  { color: #666; margin-bottom: 32px; }
+.app-logo { font-size: 3rem; margin-bottom: 8px; }
+.select-card h1 { font-size: 1.8rem; margin-bottom: 6px; }
+.select-card p  { color: #666; margin-bottom: 28px; }
 
-.select-buttons { display: flex; gap: 20px; justify-content: center; }
+.form-group { margin-bottom: 14px; text-align: left; }
 
-.btn-user {
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
   border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s;
   background: white;
-  border-radius: 16px;
-  padding: 24px 32px;
-  font-size: 2rem;
-  cursor: pointer;
-  transition: all 0.15s;
-  line-height: 1.6;
-  font-weight: 600;
-  color: #333;
+  color: #1a1a1a;
 }
 
-.btn-user:hover {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #6c63ff;
-  background: #f5f3ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(108,99,255,0.2);
+}
+
+.btn-join {
+  width: 100%;
+  padding: 14px;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.15s;
+}
+
+.btn-join:hover {
+  background: #5a52d5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108,99,255,0.3);
 }
 
 /* ── Écran chat ── */
@@ -72,7 +91,21 @@ header {
 
 .header-title { font-weight: 700; font-size: 1.1rem; }
 
-.header-status { display: flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #555; }
+.header-users { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+.header-user {
+  font-size: 0.82rem;
+  background: #f1f5f9;
+  border-radius: 20px;
+  padding: 3px 10px;
+  color: #555;
+}
+
+.header-user.me {
+  background: #ede9fe;
+  color: #6c63ff;
+  font-weight: 600;
+}
 
 .status-dot {
   width: 10px; height: 10px;

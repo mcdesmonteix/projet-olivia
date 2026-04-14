@@ -13,8 +13,8 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Démarrer LibreTranslate en arrière-plan
-echo "🌍 Démarrage de LibreTranslate (traduction FR↔EN)..."
-.venv/bin/libretranslate --load-only fr,en --port 5001 &
+echo "🌍 Démarrage de LibreTranslate (14 langues)..."
+.venv/bin/libretranslate --load-only fr,en,es,de,it,pt,nl,pl,ru,zh,ja,ar,ko,tr --port 5001 &
 LT_PID=$!
 
 # Attendre que LibreTranslate soit prêt
@@ -38,8 +38,8 @@ fi
 echo ""
 echo "✅ Application prête !"
 echo ""
-echo "   Louise  → https://localhost:8000"
-echo "   Olivia  → https://$LOCAL_IP:8000"
+echo "   Local   → https://localhost:8000"
+echo "   Réseau  → https://$LOCAL_IP:8000"
 echo ""
 echo "   (Ctrl+C pour arrêter)"
 echo ""
