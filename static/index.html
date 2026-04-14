@@ -40,14 +40,19 @@
 
     <footer>
       <div id="recording-indicator" class="hidden">🎙️ Enregistrement…</div>
-      <button id="btn-mic"
-        onmousedown="startRecording()"
-        onmouseup="stopRecording()"
-        ontouchstart="startRecording()"
-        ontouchend="stopRecording()">
-        🎤
-      </button>
-      <div class="footer-hint">Maintenir pour parler</div>
+      <div class="footer-controls">
+        <button id="btn-mic"
+          onmousedown="startRecording()"
+          onmouseup="stopRecording()"
+          ontouchstart="startRecording()"
+          ontouchend="stopRecording()">
+          🎤
+        </button>
+        <button id="btn-tts" onclick="toggleTTS()" title="Activer/désactiver la lecture vocale">
+          🔊
+        </button>
+      </div>
+      <div class="footer-hint">Maintenir 🎤 pour parler · 🔊 pour lire la traduction</div>
     </footer>
   </div>
 

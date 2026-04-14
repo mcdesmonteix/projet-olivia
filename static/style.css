@@ -148,6 +148,12 @@ footer {
   flex-shrink: 0;
 }
 
+.footer-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
 #recording-indicator {
   font-size: 0.85rem;
   color: #ef4444;
@@ -177,6 +183,27 @@ footer {
   background: #ef4444;
   transform: scale(0.94);
   box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+}
+
+#btn-tts {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  background: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#btn-tts.active {
+  background: #f0fdf4;
+  border-color: #22c55e;
+}
+
+#btn-tts.muted {
+  opacity: 0.4;
 }
 
 .footer-hint { font-size: 0.78rem; color: #aaa; }

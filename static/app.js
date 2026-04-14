@@ -3,21 +3,24 @@ let userLang = null;
 let ws = null;
 let mediaRecorder = null;
 let audioChunks = [];
+let ttsEnabled = true;
 
 const USERS = {
-  louise: { lang: "fr", flag: "🇫🇷", label: "Louise" },
-  olivia: { lang: "en", flag: "🇺🇸", label: "Olivia" },
+  louise: { lang: "fr", flag: "🇫🇷", label: "Louise", ttsLang: "fr-FR" },
+  olivia: { lang: "en", flag: "🇺🇸", label: "Olivia", ttsLang: "en-US" },
 };
+
+// ── Connexion ──
 
 function connect(id) {
   userId = id;
   userLang = USERS[id].lang;
 
-  // Masquer l'écran de sélection, afficher le chat
   document.getElementById("screen-select").classList.add("hidden");
   document.getElementById("screen-chat").classList.remove("hidden");
 
-  // Connexion WebSocket
+  updateTTSButton();
+
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
   ws = new WebSocket(`${protocol}//${location.host}/ws/${userId}`);
 
@@ -27,7 +30,6 @@ function connect(id) {
   };
 
   ws.onclose = () => addSystemMessage("Déconnecté du serveur.");
-
   ws.onerror = () => addSystemMessage("Erreur de connexion.");
 
   ws.onmessage = (event) => {
@@ -45,9 +47,15 @@ function connect(id) {
 
     if (msg.type === "message") {
       addMessage(msg);
+      // Lire la traduction à voix haute si le message vient de l'autre
+      if (msg.user !== userId && ttsEnabled) {
+        speak(msg.translated, USERS[userId].ttsLang);
+      }
     }
   };
 }
+
+// ── Statut en ligne ──
 
 function updateStatus(user, online) {
   const dot = document.getElementById(`status-${user}`);
@@ -55,6 +63,8 @@ function updateStatus(user, online) {
   dot.classList.toggle("online", online);
   dot.classList.toggle("offline", !online);
 }
+
+// ── Messages ──
 
 function addSystemMessage(text) {
   const div = document.createElement("div");
@@ -67,11 +77,9 @@ function addMessage(msg) {
   const isMe = msg.user === userId;
   const info = USERS[msg.user];
 
-  // Texte que MOI je vois en premier (ma langue)
-  // Si c'est mon message : original en premier
-  // Si c'est l'autre : traduction en premier (ma langue)
-  const mainText  = isMe ? msg.original  : msg.translated;
-  const subText   = isMe ? msg.translated : msg.original;
+  // Affiche d'abord le texte dans ma langue
+  const mainText = isMe ? msg.original  : msg.translated;
+  const subText  = isMe ? msg.translated : msg.original;
 
   const wrapper = document.createElement("div");
   wrapper.className = `message ${isMe ? "me" : "other"}`;
@@ -101,6 +109,31 @@ function appendToMessages(el) {
   container.scrollTop = container.scrollHeight;
 }
 
+// ── Synthèse vocale (TTS) ──
+
+function speak(text, lang) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel(); // Annule si déjà en train de parler
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = lang;
+  utt.rate = 0.95;
+  window.speechSynthesis.speak(utt);
+}
+
+function toggleTTS() {
+  ttsEnabled = !ttsEnabled;
+  if (!ttsEnabled) window.speechSynthesis?.cancel();
+  updateTTSButton();
+}
+
+function updateTTSButton() {
+  const btn = document.getElementById("btn-tts");
+  if (!btn) return;
+  btn.classList.toggle("active", ttsEnabled);
+  btn.classList.toggle("muted", !ttsEnabled);
+  btn.title = ttsEnabled ? "Lecture vocale activée (cliquer pour désactiver)" : "Lecture vocale désactivée (cliquer pour activer)";
+}
+
 // ── Microphone ──
 
 async function requestMicPermission() {
@@ -124,7 +157,6 @@ async function startRecording() {
 
   audioChunks = [];
 
-  // Choisir le format selon le navigateur
   const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
     ? "audio/webm;codecs=opus"
     : "audio/mp4";
