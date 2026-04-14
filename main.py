@@ -15,7 +15,7 @@ app = FastAPI()
 LIBRETRANSLATE_URL = "http://127.0.0.1:5001/translate"
 
 print("Chargement du modèle Whisper...")
-model = WhisperModel("small", device="cpu", compute_type="int8")
+model = WhisperModel("medium", device="cpu", compute_type="int8")
 print("Modèle prêt !")
 
 # Utilisateurs connectés : { session_id: { "ws", "name", "lang" } }
