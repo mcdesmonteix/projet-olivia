@@ -69,37 +69,69 @@ Utilisateur B (parle) → Whisper (transcription) → LibreTranslate (traduction
 
 ## 📋 Prérequis
 
-- macOS avec [Homebrew](https://brew.sh/) (pour le setup automatique)
-- Python 3.11+
+- Python 3.11+ — [python.org](https://python.org)
+- FFmpeg — [ffmpeg.org](https://ffmpeg.org)
+- mkcert — [github.com/FiloSottile/mkcert](https://github.com/FiloSottile/mkcert)
 - ~600 Mo d'espace disque (modèles Whisper + LibreTranslate)
 - Microphone
 
-> **Windows/Linux** : le setup manuel reste possible, voir la section ci-dessous.
-
 ## 🚀 Installation
 
+### 🍎 macOS
+
 ```bash
-git clone https://github.com/TON_USERNAME/projet-olivia.git
+git clone https://github.com/mcdesmonteix/projet-olivia.git
 cd projet-olivia
-chmod +x setup.sh start.sh
+chmod +x setup.sh start_all.sh
 ./setup.sh
 ```
 
-Le script installe automatiquement FFmpeg, mkcert, les dépendances Python et télécharge les modèles.
+Le script installe automatiquement les dépendances via Homebrew et télécharge les modèles.
+
+### 🪟 Windows
+
+1. Installer [Python 3.11+](https://python.org/downloads/), [FFmpeg](https://ffmpeg.org/download.html) et [mkcert](https://github.com/FiloSottile/mkcert/releases)
+2. Cloner le projet et ouvrir un terminal dans le dossier :
+```bat
+git clone https://github.com/mcdesmonteix/projet-olivia.git
+cd projet-olivia
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+```
+3. Télécharger les modèles Whisper et LibreTranslate :
+```bat
+.venv\Scripts\python -c "from faster_whisper import WhisperModel; WhisperModel('small')"
+.venv\Scripts\libretranslate --load-only fr,en --update-files
+```
 
 ## ▶️ Lancement
 
-**Terminal 1 — Moteur de traduction :**
+### 🍎 macOS — une seule commande
+
 ```bash
-.venv/bin/libretranslate --load-only fr,en --port 5001
+./start_all.sh
 ```
 
-**Terminal 2 — Serveur de l'application :**
-```bash
-./start.sh
+Lance LibreTranslate et le serveur automatiquement. L'IP locale est détectée et affichée.
+
+### 🪟 Windows — deux terminaux
+
+**Terminal 1 :**
+```bat
+.venv\Scripts\libretranslate --load-only fr,en --port 5001
 ```
 
-L'adresse IP locale est détectée automatiquement et affichée au démarrage.
+**Terminal 2 :**
+```bat
+REM Trouver son IP locale
+ipconfig
+REM Générer le certificat SSL (remplacer TON_IP)
+mkcert TON_IP localhost 127.0.0.1
+REM Lancer le serveur
+.venv\Scripts\uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-certfile TON_IP+2.pem --ssl-keyfile TON_IP+2-key.pem
+```
+
+---
 
 **Utilisateur A** ouvre : `https://localhost:8000`  
 **Utilisateur B** ouvre : `https://[IP-affichée]:8000`
@@ -111,23 +143,15 @@ L'adresse IP locale est détectée automatiquement et affichée au démarrage.
 Pour une connexion entre deux pays, utilise [ngrok](https://ngrok.com/) :
 
 ```bash
+# macOS
 brew install ngrok
+# Windows : télécharger sur ngrok.com
+
 ngrok config add-authtoken TON_TOKEN
 ngrok http 8000
 ```
 
 Partage l'URL générée (`https://xxx.ngrok-free.app`) avec l'autre utilisateur.
-
-## 🛠️ Installation manuelle (Windows / Linux)
-
-1. Installer [Python 3.11+](https://python.org), [FFmpeg](https://ffmpeg.org/), [mkcert](https://github.com/FiloSottile/mkcert)
-2. Créer le venv : `python3 -m venv .venv`
-3. Installer les dépendances : `.venv/bin/pip install -r requirements.txt`
-4. Générer le certificat : `mkcert TON_IP localhost 127.0.0.1`
-5. Lancer uvicorn manuellement :
-```bash
-.venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-certfile TON_IP+2.pem --ssl-keyfile TON_IP+2-key.pem
-```
 
 ## 📁 Structure du projet
 
@@ -135,7 +159,7 @@ Partage l'URL générée (`https://xxx.ngrok-free.app`) avec l'autre utilisateur
 projet-olivia/
 ├── main.py              # Serveur FastAPI + WebSockets + Whisper + LibreTranslate
 ├── start.sh             # Script de lancement (détecte l'IP automatiquement)
-├── setup.sh             # Script d'installation (macOS)
+├── setup.sh             # Script d'installation automatique (macOS)
 ├── requirements.txt     # Dépendances Python
 └── static/
     ├── index.html       # Interface web
