@@ -1,17 +1,19 @@
-# 🌍 Projet Olivia
+# 🎙️ WhisperBridge
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.135-green?logo=fastapi)
-![Whisper](https://img.shields.io/badge/Whisper-medium-orange?logo=openai)
+![Whisper](https://img.shields.io/badge/Whisper-small%2Bmedium-orange?logo=openai)
 ![LibreTranslate](https://img.shields.io/badge/LibreTranslate-1.9-purple)
 ![Langues](https://img.shields.io/badge/Langues-8-red)
 ![100% Local](https://img.shields.io/badge/100%25-Local-darkgreen)
 ![Licence MIT](https://img.shields.io/badge/Licence-MIT-yellow)
-![POC Validé](https://img.shields.io/badge/POC-Validé%20✅-brightgreen)
+![En ligne](https://img.shields.io/badge/En%20ligne-whisperbridge.duckdns.org-brightgreen)
 
 Application de conversation multilingue en temps réel. Chaque participant choisit son prénom et sa langue — la traduction est instantanée et automatique.
 
 **Exemple d'usage :** Louise (🇫🇷) et Olivia (🇺🇸) parlent chacune dans leur langue, et se comprennent en temps réel. Nuria (🇪🇸) peut rejoindre la conversation à tout moment.
+
+> 🌐 **Instance publique disponible sur [`https://whisperbridge.duckdns.org`](https://whisperbridge.duckdns.org)**
 
 ## 🎬 Démonstration
 
@@ -66,7 +68,7 @@ L'interface propose 4 thèmes, sélectionnables avant ou pendant la conversation
 
 ## ✨ Fonctionnalités
 
-- 🎤 **Transcription vocale** locale via [Whisper medium](https://github.com/openai/whisper) (faster-whisper)
+- 🎤 **Transcription vocale** locale via [Whisper](https://github.com/openai/whisper) (small pour FR/EN/ES/IT/PT, medium pour ZH/AR/RU)
 - 🌍 **Traduction multilingue** via [LibreTranslate](https://libretranslate.com/) (100% local, 8 langues)
 - 🔄 **Temps réel** via WebSockets — plusieurs participants simultanés
 - 🤖 **Mode VAD** — détection automatique de la voix, mains libres
@@ -105,6 +107,8 @@ cd projet-olivia
 chmod +x setup.sh start_all.sh start_ngrok.sh
 ./setup.sh
 ```
+
+> Tu peux aussi utiliser directement l'instance publique sur **[whisperbridge.duckdns.org](https://whisperbridge.duckdns.org)** sans aucune installation.
 
 Le script installe automatiquement les dépendances via Homebrew et télécharge les modèles.
 
@@ -163,6 +167,18 @@ mkcert 192.168.X.X localhost 127.0.0.1
 > La première fois, le navigateur affiche un avertissement SSL (certificat auto-signé).  
 > Cliquer sur **"Paramètres avancés"** → **"Continuer quand même"**.  
 > Sur iPhone : **"Afficher les détails"** → **"Visiter ce site web"**.
+
+---
+
+### Cas 3 — Serveur permanent (recommandé)
+
+> Aucune installation requise. Fonctionne 24h/24 sans laisser son ordinateur allumé.
+
+Ouvrir directement **[https://whisperbridge.duckdns.org](https://whisperbridge.duckdns.org)** dans n'importe quel navigateur.
+
+- Hébergé sur Oracle Cloud Free Tier (ARM, 4 cœurs, 24 Go RAM)
+- HTTPS automatique via Caddy + Let's Encrypt
+- Démarrage automatique au boot
 
 ---
 
@@ -277,10 +293,10 @@ projet-olivia/
 - [x] Connexion internet via Ngrok (`./start_ngrok.sh`)
 - [x] Interface dynamique — prénom + langue au choix
 - [x] 8 langues : 🇫🇷 🇬🇧 🇨🇳 🇸🇦 🇷🇺 🇪🇸 🇮🇹 🇵🇹
-- [x] Whisper medium — meilleure qualité de transcription
+- [x] Whisper small+medium — optimisation latence/qualité selon la langue
 - [x] 4 thèmes visuels sélectionnables
-- [ ] Application mobile native (iOS / Android)
-- [ ] Hébergement permanent (sans avoir à laisser son PC allumé)
+- [x] Hébergement permanent — Oracle Cloud + HTTPS (whisperbridge.duckdns.org)
+- [ ] Application mobile native (iOS / Android) — mode hors-ligne
 
 ## 📄 Licence
 
