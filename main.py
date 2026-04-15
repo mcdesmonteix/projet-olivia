@@ -1,6 +1,8 @@
+import asyncio
 import base64
 import os
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Dict
 
@@ -14,25 +16,37 @@ app = FastAPI()
 
 LIBRETRANSLATE_URL = "http://127.0.0.1:5001/translate"
 
-print("Chargement du modèle Whisper...")
-model = WhisperModel("medium", device="cpu", compute_type="int8")
-print("Modèle prêt !")
+# Langues complexes (non-latines) → modèle medium pour la qualité
+LANGS_MEDIUM = {"zh", "ar", "ru"}
+
+print("Chargement des modèles Whisper...")
+model_small = WhisperModel("small", device="cpu", compute_type="int8")
+model_medium = WhisperModel("medium", device="cpu", compute_type="int8")
+print("Modèles prêts !")
+
+_executor = ThreadPoolExecutor(max_workers=2)
 
 # Utilisateurs connectés : { session_id: { "ws", "name", "lang" } }
 users: Dict[str, dict] = {}
 
 
-async def transcribe(audio_bytes: bytes, lang: str) -> str:
+def _transcribe_sync(audio_bytes: bytes, lang: str) -> str:
+    whisper = model_medium if lang in LANGS_MEDIUM else model_small
     with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as f:
         f.write(audio_bytes)
         tmp_path = f.name
     try:
-        segments, info = model.transcribe(tmp_path, language=lang)
+        segments, info = whisper.transcribe(tmp_path, language=lang, beam_size=1)
         text = " ".join(seg.text.strip() for seg in segments)
-        print(f"  Transcription ({info.language}) : {text}")
+        print(f"  Transcription ({info.language}, {'medium' if lang in LANGS_MEDIUM else 'small'}) : {text}")
         return text
     finally:
         os.unlink(tmp_path)
+
+
+async def transcribe(audio_bytes: bytes, lang: str) -> str:
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(_executor, _transcribe_sync, audio_bytes, lang)
 
 
 async def translate(text: str, source: str, target: str) -> str:
