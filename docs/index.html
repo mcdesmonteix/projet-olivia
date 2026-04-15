@@ -21,6 +21,7 @@
         <a href="#screenshots">Aperçu</a>
         <a href="#install">Installation</a>
         <a href="https://github.com/mcdesmonteix/whisperbridge" target="_blank" class="btn-github">GitHub ↗</a>
+        <button class="btn-theme-toggle" id="themeToggle" title="Changer de thème" aria-label="Changer de thème">🌙</button>
       </div>
     </nav>
 
@@ -178,6 +179,25 @@ cd whisperbridge
   </footer>
 
   <script>
+    // Mode clair / sombre
+    const toggle = document.getElementById('themeToggle');
+    const html   = document.documentElement;
+
+    function applyTheme(theme) {
+      html.dataset.theme = theme;
+      toggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('wb-theme', theme);
+    }
+
+    // Applique la préférence sauvegardée, ou celle du système
+    const saved = localStorage.getItem('wb-theme');
+    const preferred = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    applyTheme(saved || preferred);
+
+    toggle.addEventListener('click', () => {
+      applyTheme(html.dataset.theme === 'light' ? 'dark' : 'light');
+    });
+
     // Animation au scroll
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });

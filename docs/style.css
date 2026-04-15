@@ -13,6 +13,15 @@
   --radius: 16px;
 }
 
+html[data-theme="light"] {
+  --bg: #f5f4ff;
+  --bg2: #ffffff;
+  --bg3: #ede9fb;
+  --text: #1a1520;
+  --text-muted: #6b6882;
+  --border: rgba(0,0,0,0.08);
+}
+
 html { scroll-behavior: smooth; }
 
 body {
@@ -20,7 +29,29 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
 }
+
+/* Hero h1 gradient — adapté au mode clair */
+html[data-theme="light"] .hero h1 {
+  background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Bouton toggle thème */
+.btn-theme-toggle {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-theme-toggle:hover { transform: scale(1.1); }
 
 /* ── NAV ── */
 nav {
