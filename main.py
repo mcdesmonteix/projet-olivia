@@ -26,8 +26,8 @@ print("Modèles prêts !")
 
 _executor = ThreadPoolExecutor(max_workers=2)
 
-# Utilisateurs connectés : { session_id: { "ws", "name", "lang" } }
-users: Dict[str, dict] = {}
+# Salles : { room_id: { session_id: { "ws", "name", "lang" } } }
+rooms: Dict[str, Dict[str, dict]] = {}
 
 
 def _transcribe_sync(audio_bytes: bytes, lang: str) -> str:
@@ -64,9 +64,11 @@ async def translate(text: str, source: str, target: str) -> str:
         return result
 
 
-async def broadcast(message: dict, exclude: str = None):
+async def broadcast_room(room_id: str, message: dict, exclude: str = None):
+    if room_id not in rooms:
+        return
     dead = []
-    for sid, info in users.items():
+    for sid, info in rooms[room_id].items():
         if sid == exclude:
             continue
         try:
@@ -74,17 +76,20 @@ async def broadcast(message: dict, exclude: str = None):
         except Exception:
             dead.append(sid)
     for sid in dead:
-        users.pop(sid, None)
+        rooms[room_id].pop(sid, None)
 
 
-async def broadcast_all(message: dict):
-    await broadcast(message, exclude=None)
+@app.get("/room/{room_id}")
+async def room_page(room_id: str):
+    return FileResponse("static/index.html")
 
 
-@app.websocket("/ws/{session_id}")
-async def websocket_endpoint(websocket: WebSocket, session_id: str):
+@app.websocket("/ws/{room_id}/{session_id}")
+async def websocket_endpoint(websocket: WebSocket, room_id: str, session_id: str):
     await websocket.accept()
-    users[session_id] = {"ws": websocket, "name": session_id, "lang": "fr"}
+    if room_id not in rooms:
+        rooms[room_id] = {}
+    rooms[room_id][session_id] = {"ws": websocket, "name": session_id, "lang": "fr"}
 
     try:
         while True:
@@ -92,13 +97,12 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
             # ── Connexion avec nom et langue ──
             if data["type"] == "join":
-                users[session_id]["name"] = data["name"]
-                users[session_id]["lang"] = data["lang"]
+                rooms[room_id][session_id]["name"] = data["name"]
+                rooms[room_id][session_id]["lang"] = data["lang"]
                 name = data["name"]
-                print(f"\n[+] {name} connecté(e) en {data['lang']} ({len(users)} en ligne)")
+                print(f"\n[+] {name} connecté(e) en {data['lang']} (salle {room_id}, {len(rooms[room_id])} en ligne)")
 
-                # Informer tout le monde de la connexion
-                await broadcast_all({
+                await broadcast_room(room_id, {
                     "type": "status",
                     "session_id": session_id,
                     "name": name,
@@ -108,12 +112,12 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 
             # ── Audio reçu ──
             elif data["type"] == "audio":
-                user = users[session_id]
+                user = rooms[room_id][session_id]
                 lang = user["lang"]
                 name = user["name"]
 
                 audio_bytes = base64.b64decode(data["data"])
-                print(f"\n[{name}] Audio reçu ({len(audio_bytes)} octets)")
+                print(f"\n[{name}] Audio reçu ({len(audio_bytes)} octets, salle {room_id})")
 
                 try:
                     original = await transcribe(audio_bytes, lang)
@@ -121,17 +125,15 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                         print("  (transcription vide, ignorée)")
                         continue
 
-                    # Traduire pour chaque autre utilisateur dans sa langue
                     translations = {}
-                    for sid, other in users.items():
+                    for sid, other in rooms[room_id].items():
                         if sid == session_id:
                             continue
                         target = other["lang"]
                         if target not in translations:
                             translations[target] = await translate(original, lang, target)
 
-                    # Diffuser le message avec toutes les traductions
-                    await broadcast_all({
+                    await broadcast_room(room_id, {
                         "type": "message",
                         "session_id": session_id,
                         "name": name,
@@ -146,10 +148,12 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
                     await websocket.send_json({"type": "error", "message": str(e)})
 
     except WebSocketDisconnect:
-        user = users.pop(session_id, {})
+        user = rooms.get(room_id, {}).pop(session_id, {})
+        if room_id in rooms and not rooms[room_id]:
+            del rooms[room_id]
         name = user.get("name", session_id)
-        print(f"\n[-] {name} déconnecté(e)")
-        await broadcast_all({
+        print(f"\n[-] {name} déconnecté(e) (salle {room_id})")
+        await broadcast_room(room_id, {
             "type": "status",
             "session_id": session_id,
             "name": name,

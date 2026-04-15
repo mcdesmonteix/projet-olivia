@@ -38,7 +38,37 @@ const LANGUAGES = {
   pt: { name: "Português", flag: "🇵🇹", ttsLang: "pt-PT" },
 };
 
+// ── Salle ──
+
+function getRoomId() {
+  const match = location.pathname.match(/\/room\/([a-z0-9]+)/);
+  return match ? match[1] : null;
+}
+
+function initRoomUI() {
+  const roomId = getRoomId();
+  if (roomId) {
+    document.getElementById("room-label").textContent = `Salle : ${roomId}`;
+    document.getElementById("btn-join").textContent = "Rejoindre →";
+  } else {
+    document.getElementById("room-label").textContent = "Nouvelle conversation ou rejoins un lien partagé";
+    document.getElementById("btn-join").textContent = "Créer une conversation →";
+  }
+}
+
+function shareRoom() {
+  const url = location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => addSystemMessage("🔗 Lien copié ! Envoie-le à tes interlocuteurs."));
+  } else {
+    prompt("Copie ce lien :", url);
+  }
+}
+
+initRoomUI();
+
 // ── État ──
+let roomId     = null;
 let sessionId  = null;
 let userName   = null;
 let userLang   = null;
@@ -82,6 +112,13 @@ function connectUser() {
   userLang  = lang;
   sessionId = Math.random().toString(36).substr(2, 9);
 
+  // Récupère ou génère l'ID de salle
+  roomId = getRoomId();
+  if (!roomId) {
+    roomId = Math.random().toString(36).substr(2, 6);
+    history.replaceState(null, '', `/room/${roomId}`);
+  }
+
   document.getElementById("screen-select").classList.add("hidden");
   document.getElementById("screen-chat").classList.remove("hidden");
 
@@ -89,7 +126,7 @@ function connectUser() {
   updateVADButton();
 
   const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-  ws = new WebSocket(`${protocol}//${location.host}/ws/${sessionId}`);
+  ws = new WebSocket(`${protocol}//${location.host}/ws/${roomId}/${sessionId}`);
 
   ws.onopen = () => {
     ws.send(JSON.stringify({ type: "join", name: userName, lang: userLang }));

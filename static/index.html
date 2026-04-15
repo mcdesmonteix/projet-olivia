@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌍 Projet Olivia</title>
+  <title>🎙️ WhisperBridge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -21,9 +21,9 @@
   <!-- ── Écran de connexion ── -->
   <div id="screen-select">
     <div class="select-card">
-      <div class="app-logo">🌍</div>
-      <h1>Projet Olivia</h1>
-      <p>Entre ton prénom et ta langue</p>
+      <div class="app-logo">🎙️</div>
+      <h1>WhisperBridge</h1>
+      <p id="room-label">Entre ton prénom et ta langue</p>
 
       <div class="form-group">
         <input id="input-name" type="text" placeholder="Ton prénom" maxlength="20" autocomplete="off"
@@ -43,7 +43,7 @@
         </select>
       </div>
 
-      <button class="btn-join" onclick="connectUser()">Rejoindre →</button>
+      <button class="btn-join" onclick="connectUser()" id="btn-join">Rejoindre →</button>
 
       <div class="theme-picker-label">Choisir un thème</div>
       <div class="theme-picker">
@@ -59,8 +59,8 @@
   <div id="screen-chat" class="hidden">
     <header>
       <div class="header-left">
-        <div class="header-logo-box">🌍</div>
-        <div class="header-title">Projet Olivia</div>
+        <div class="header-logo-box">🎙️</div>
+        <div class="header-title">WhisperBridge</div>
       </div>
       <div class="header-right">
         <div id="header-users" class="header-users"></div>
@@ -91,6 +91,9 @@
         <button id="btn-tts" onclick="toggleTTS()" title="Lecture vocale">🔊</button>
       </div>
       <div class="footer-hint">🤖 Auto · 🎤 Maintenir pour parler · 🔊 Lecture vocale</div>
+      <div class="footer-hint" style="margin-top:4px">
+        <button id="btn-share" onclick="shareRoom()" title="Partager le lien de cette conversation">🔗 Partager le lien</button>
+      </div>
     </footer>
   </div>
 
