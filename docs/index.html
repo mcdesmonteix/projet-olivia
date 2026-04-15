@@ -198,7 +198,7 @@ cd whisperbridge
 
     function goTo(n) {
       current = (n + captions.length) % captions.length;
-      slides.style.transform = `translateX(-${current * 100}%)`;
+      slides.style.transform = `translateX(-${current * 20}%)`;
       caption.textContent = captions[current];
       dots.forEach((d, i) => d.classList.toggle('active', i === current));
     }
