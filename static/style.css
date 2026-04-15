@@ -286,8 +286,14 @@ body {
 }
 
 .app-logo {
-  font-size: 3rem;
   margin-bottom: 8px;
+}
+.app-logo img {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: block;
+  margin: 0 auto;
 }
 [data-theme="dark"] .app-logo-inner,
 [data-theme="vivid"] .app-logo-inner {
@@ -404,10 +410,15 @@ header {
 .header-logo-box {
   width: 34px; height: 34px;
   border-radius: 10px;
-  background: var(--btn-mic);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+.header-logo-box img {
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .header-title {
