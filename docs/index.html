@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhisperBridge — Traduction vocale en temps réel</title>
+  <meta name="description" content="Parlez dans votre langue, soyez compris dans la leur. Application de traduction vocale en temps réel, open source et 100% locale." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <header class="hero">
+    <nav>
+      <div class="nav-logo">🎙️ WhisperBridge</div>
+      <div class="nav-links">
+        <a href="#features">Fonctionnalités</a>
+        <a href="#screenshots">Aperçu</a>
+        <a href="#install">Installation</a>
+        <a href="https://github.com/mcdesmonteix/whisperbridge" target="_blank" class="btn-github">GitHub ↗</a>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-badge">Open Source · 100% Local · Gratuit</div>
+      <h1>Parlez dans votre langue.<br>Soyez compris dans la leur.</h1>
+      <p class="hero-sub">WhisperBridge traduit vos paroles en temps réel. Aucune installation, aucun compte, aucune donnée envoyée à l'extérieur.</p>
+      <div class="hero-actions">
+        <a href="https://whisperbridge.duckdns.org" target="_blank" class="btn-primary">Essayer maintenant →</a>
+        <a href="https://github.com/mcdesmonteix/whisperbridge" target="_blank" class="btn-secondary">Voir le code source</a>
+      </div>
+      <div class="hero-langs">
+        <span>🇫🇷</span><span>🇬🇧</span><span>🇪🇸</span><span>🇮🇹</span>
+        <span>🇵🇹</span><span>🇨🇳</span><span>🇸🇦</span><span>🇷🇺</span>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img src="media/branding.png" alt="WhisperBridge en action" />
+    </div>
+  </header>
+
+  <!-- ── FEATURES ── -->
+  <section id="features" class="features">
+    <h2>Tout ce dont vous avez besoin</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎤</div>
+        <h3>Transcription vocale</h3>
+        <p>Propulsé par Whisper d'OpenAI. Parlez naturellement — WhisperBridge s'occupe du reste.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>8 langues</h3>
+        <p>Français, anglais, espagnol, italien, portugais, mandarin, arabe, russe. Traduction 100% locale.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Salles privées</h3>
+        <p>Chaque conversation génère un lien unique. Partagez-le — personne d'autre ne peut rejoindre.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>Mode auto (VAD)</h3>
+        <p>Détection automatique de la voix. Pas besoin de maintenir un bouton — parlez naturellement.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔊</div>
+        <h3>Synthèse vocale</h3>
+        <p>Les traductions sont lues à voix haute automatiquement. Idéal quand vous ne pouvez pas regarder l'écran.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>100% local</h3>
+        <p>Aucune donnée audio envoyée à Google, OpenAI ou autre. Tout tourne sur votre machine.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <section id="screenshots" class="screenshots">
+    <h2>Aperçu de l'application</h2>
+    <div class="screenshots-grid">
+      <div class="screenshot-item">
+        <img src="media/screenshot-login.png" alt="Écran de connexion" />
+        <p>Choisissez votre prénom et votre langue</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="media/screenshot-chat.png" alt="Conversation en cours" />
+        <p>Conversation en temps réel avec lien de salle unique</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="media/screenshot-languages.png" alt="Sélection de la langue" />
+        <p>8 langues disponibles</p>
+      </div>
+      <div class="screenshot-item">
+        <img src="media/screenshot-login-mobile.png" alt="Vue mobile" />
+        <p>Fonctionne sur mobile sans installation</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how">
+    <h2>Comment ça marche ?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Ouvrez l'application</h3>
+        <p>Accédez à <strong>whisperbridge.duckdns.org</strong> ou hébergez-le vous-même.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Créez une conversation</h3>
+        <p>Entrez votre prénom, choisissez votre langue. Un lien unique est généré.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Partagez le lien</h3>
+        <p>Envoyez le lien à votre interlocuteur. Il rejoint en un clic.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Parlez librement</h3>
+        <p>Chacun parle dans sa langue. La traduction s'affiche et se lit en temps réel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INSTALL ── -->
+  <section id="install" class="install">
+    <h2>Auto-hébergement</h2>
+    <p class="install-sub">WhisperBridge est open source. Hébergez votre propre instance en quelques minutes.</p>
+    <div class="code-block">
+      <pre><code>git clone https://github.com/mcdesmonteix/whisperbridge.git
+cd whisperbridge
+./setup.sh</code></pre>
+    </div>
+    <a href="https://github.com/mcdesmonteix/whisperbridge#installation" target="_blank" class="btn-secondary">Voir le guide complet ↗</a>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-logo">🎙️ WhisperBridge</div>
+    <p>Open source · Licence MIT</p>
+    <div class="footer-links">
+      <a href="https://github.com/mcdesmonteix/whisperbridge" target="_blank">GitHub</a>
+      <a href="https://whisperbridge.duckdns.org" target="_blank">Lancer l'app</a>
+    </div>
+  </footer>
+
+  <script>
+    // Animation au scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.feature-card, .screenshot-item, .step').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
