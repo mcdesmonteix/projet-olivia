@@ -89,13 +89,8 @@
       <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
 
       <div class="carousel-viewer">
-        <!-- Slide 0 : image hero plein format -->
-        <div class="slide-hero" id="slideHero">
-          <img src="media/screenshots/00-branding.png" alt="WhisperBridge en action" />
-        </div>
-
-        <!-- Slides 1-5 : mockup iPhone -->
-        <div class="iphone-mockup" id="phoneMockup" style="display:none">
+        <!-- Mockup iPhone -->
+        <div class="iphone-mockup" id="phoneMockup">
           <div class="iphone-frame">
             <div class="iphone-notch"></div>
             <div class="iphone-screen">
@@ -127,7 +122,6 @@
       <button class="dot" data-index="3"></button>
       <button class="dot" data-index="4"></button>
       <button class="dot" data-index="5"></button>
-      <button class="dot" data-index="6"></button>
     </div>
   </section>
 
@@ -192,7 +186,6 @@ cd whisperbridge
 
     // Carrousel
     const captions = [
-      "WhisperBridge — traduction vocale en temps réel",
       "Une interface épurée, prête en un instant",
       "Connexion en un clic, sans compte",
       "Vos interlocuteurs apparaissent en temps réel",
@@ -201,30 +194,19 @@ cd whisperbridge
       "Chaque message traduit instantanément dans les deux langues"
     ];
     const TOTAL = captions.length;
-    const PHONE_SLIDES = TOTAL - 1; // 6 slides dans le téléphone
+    const PHONE_SLIDES = TOTAL;
 
     let current = 0;
     let autoTimer;
-    const phoneSlides  = document.getElementById('carouselSlides');
-    const slideHero    = document.getElementById('slideHero');
-    const phoneMockup  = document.getElementById('phoneMockup');
-    const caption      = document.getElementById('carouselCaption');
-    const dots         = document.querySelectorAll('.dot');
+    const phoneSlides = document.getElementById('carouselSlides');
+    const caption     = document.getElementById('carouselCaption');
+    const dots        = document.querySelectorAll('.dot');
 
     function goTo(n) {
       current = (n + TOTAL) % TOTAL;
       caption.textContent = captions[current];
       dots.forEach((d, i) => d.classList.toggle('active', i === current));
-
-      if (current === 0) {
-        slideHero.style.display  = 'block';
-        phoneMockup.style.display = 'none';
-      } else {
-        slideHero.style.display  = 'none';
-        phoneMockup.style.display = 'block';
-        // Décale au bon slide dans le téléphone (index 1→0, 2→1, …)
-        phoneSlides.style.transform = `translateX(-${(current - 1) * (100 / PHONE_SLIDES)}%)`;
-      }
+      phoneSlides.style.transform = `translateX(-${current * (100 / PHONE_SLIDES)}%)`;
     }
 
     function startAuto() {
