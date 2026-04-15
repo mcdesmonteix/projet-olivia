@@ -22,11 +22,8 @@ Chaque conversation se crée en un clic et génère un lien unique à partager. 
 ## 📸 Aperçu
 
 <div align="center">
-  <img src="docs/media/screenshots/01-connexion.png" width="18%" alt="Connexion" />
-  <img src="docs/media/screenshots/02-participants.png" width="18%" alt="Participants" />
-  <img src="docs/media/screenshots/03-mode-auto.png" width="18%" alt="Mode auto" />
-  <img src="docs/media/screenshots/04-recording.png" width="18%" alt="Enregistrement" />
-  <img src="docs/media/screenshots/05-conversation.png" width="18%" alt="Conversation" />
+  <img src="docs/media/screenshots/mockup-participants.png" width="45%" alt="Participants connectés" />
+  <img src="docs/media/screenshots/mockup-conversation.png" width="45%" alt="Conversation traduite" />
 </div>
 
 > 🎠 Carrousel interactif disponible sur [mcdesmonteix.github.io/whisperbridge](https://mcdesmonteix.github.io/whisperbridge/#screenshots)
