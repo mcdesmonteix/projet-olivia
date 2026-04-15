@@ -212,31 +212,148 @@ section h2 {
 .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
 
 /* ── SCREENSHOTS ── */
-.screenshots { background: var(--bg); border-bottom: 1px solid var(--border); }
-
-.screenshots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-}
-
-.screenshot-item {
+.screenshots {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
   text-align: center;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.4s, transform 0.4s;
 }
 
-.screenshot-item.visible { opacity: 1; transform: none; }
+.screenshots-sub {
+  color: var(--text-muted);
+  margin-top: -16px;
+  margin-bottom: 48px;
+  font-size: 1rem;
+}
 
-.screenshot-item img {
-  width: 100%;
-  border-radius: var(--radius);
+/* Carrousel wrapper */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  position: relative;
+}
+
+/* Flèches */
+.carousel-arrow {
+  background: var(--bg3);
   border: 1px solid var(--border);
-  margin-bottom: 12px;
+  color: var(--text);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+.carousel-arrow:hover { background: var(--purple); transform: scale(1.1); }
+
+/* Mockup iPhone */
+.iphone-mockup { position: relative; }
+
+.iphone-frame {
+  width: 260px;
+  height: 520px;
+  background: #1a1a1e;
+  border-radius: 44px;
+  border: 6px solid #3a3a3e;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px #555,
+    0 30px 80px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
-.screenshot-item p { color: var(--text-muted); font-size: 0.9rem; }
+/* Encoche */
+.iphone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 26px;
+  background: #1a1a1e;
+  border-radius: 0 0 20px 20px;
+  z-index: 10;
+}
+
+/* Barre home */
+.iphone-home-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+  z-index: 10;
+}
+
+/* Écran */
+.iphone-screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 38px;
+}
+
+/* Slides */
+.iphone-slides {
+  display: flex;
+  width: 500%; /* 5 slides */
+  height: 100%;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.iphone-slides img {
+  width: 20%; /* 1/5 de 500% */
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+}
+
+/* Caption */
+.carousel-caption {
+  margin-top: 28px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  min-height: 1.4em;
+  transition: opacity 0.3s;
+}
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg3);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  padding: 0;
+}
+
+.dot.active {
+  background: var(--purple-light);
+  transform: scale(1.3);
+}
+
+@media (max-width: 600px) {
+  .carousel-arrow { display: none; }
+  .iphone-frame { width: 220px; height: 440px; }
+}
 
 /* ── HOW IT WORKS ── */
 .how {

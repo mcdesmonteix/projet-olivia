@@ -83,23 +83,43 @@
   <!-- ── SCREENSHOTS ── -->
   <section id="screenshots" class="screenshots">
     <h2>Aperçu de l'application</h2>
-    <div class="screenshots-grid">
-      <div class="screenshot-item">
-        <img src="media/screenshot-login.png" alt="Écran de connexion" />
-        <p>Choisissez votre prénom et votre langue</p>
+    <p class="screenshots-sub">Découvrez WhisperBridge en action</p>
+
+    <div class="carousel-wrapper">
+      <!-- Flèche gauche -->
+      <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
+
+      <!-- Mockup iPhone -->
+      <div class="iphone-mockup">
+        <div class="iphone-frame">
+          <div class="iphone-notch"></div>
+          <div class="iphone-screen">
+            <div class="iphone-slides" id="carouselSlides">
+              <img src="media/screenshots/01-connexion.png"  alt="Connexion" />
+              <img src="media/screenshots/02-participants.png" alt="Participants connectés" />
+              <img src="media/screenshots/03-mode-auto.png"  alt="Mode automatique" />
+              <img src="media/screenshots/04-recording.png"  alt="Enregistrement en cours" />
+              <img src="media/screenshots/05-conversation.png" alt="Conversation traduite" />
+            </div>
+          </div>
+          <div class="iphone-home-bar"></div>
+        </div>
       </div>
-      <div class="screenshot-item">
-        <img src="media/screenshot-chat.png" alt="Conversation en cours" />
-        <p>Conversation en temps réel avec lien de salle unique</p>
-      </div>
-      <div class="screenshot-item">
-        <img src="media/screenshot-languages.png" alt="Sélection de la langue" />
-        <p>8 langues disponibles</p>
-      </div>
-      <div class="screenshot-item">
-        <img src="media/screenshot-login-mobile.png" alt="Vue mobile" />
-        <p>Fonctionne sur mobile sans installation</p>
-      </div>
+
+      <!-- Flèche droite -->
+      <button class="carousel-arrow carousel-next" aria-label="Suivant">&#8250;</button>
+    </div>
+
+    <!-- Caption -->
+    <p class="carousel-caption" id="carouselCaption">Connexion en un clic, sans compte</p>
+
+    <!-- Dots -->
+    <div class="carousel-dots" id="carouselDots">
+      <button class="dot active" data-index="0"></button>
+      <button class="dot" data-index="1"></button>
+      <button class="dot" data-index="2"></button>
+      <button class="dot" data-index="3"></button>
+      <button class="dot" data-index="4"></button>
     </div>
   </section>
 
@@ -160,7 +180,47 @@ cd whisperbridge
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.feature-card, .screenshot-item, .step').forEach(el => observer.observe(el));
+    document.querySelectorAll('.feature-card, .step').forEach(el => observer.observe(el));
+
+    // Carrousel
+    const captions = [
+      "Connexion en un clic, sans compte",
+      "Vos interlocuteurs apparaissent en temps réel",
+      "Mode auto — parlez naturellement, WhisperBridge écoute",
+      "Enregistrement en cours, traduction imminente",
+      "Chaque message traduit instantanément dans les deux langues"
+    ];
+    let current = 0;
+    let autoTimer;
+    const slides   = document.getElementById('carouselSlides');
+    const caption  = document.getElementById('carouselCaption');
+    const dots     = document.querySelectorAll('.dot');
+
+    function goTo(n) {
+      current = (n + captions.length) % captions.length;
+      slides.style.transform = `translateX(-${current * 100}%)`;
+      caption.textContent = captions[current];
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    function startAuto() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(() => goTo(current + 1), 4000);
+    }
+
+    document.querySelector('.carousel-prev').addEventListener('click', () => { goTo(current - 1); startAuto(); });
+    document.querySelector('.carousel-next').addEventListener('click', () => { goTo(current + 1); startAuto(); });
+    dots.forEach(d => d.addEventListener('click', () => { goTo(+d.dataset.index); startAuto(); }));
+
+    // Swipe tactile
+    let touchStartX = 0;
+    slides.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    slides.addEventListener('touchend',   e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) { goTo(current + (dx < 0 ? 1 : -1)); startAuto(); }
+    });
+
+    startAuto();
   </script>
 
 </body>

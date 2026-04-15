@@ -21,24 +21,15 @@ Chaque conversation se crée en un clic et génère un lien unique à partager. 
 
 ## 📸 Aperçu
 
-<table>
-  <tr>
-    <td align="center"><b>Écran de connexion</b></td>
-    <td align="center"><b>Sélection de la langue</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/media/screenshot-login.png" alt="Écran de connexion"/></td>
-    <td><img src="docs/media/screenshot-languages.png" alt="Sélecteur de langues"/></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Conversation en cours (salle privée)</b></td>
-    <td align="center"><b>Vue mobile</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/media/screenshot-chat.png" alt="Interface conversation"/></td>
-    <td><img src="docs/media/screenshot-login-mobile.png" alt="Vue mobile"/></td>
-  </tr>
-</table>
+<div align="center">
+  <img src="docs/media/screenshots/01-connexion.png" width="18%" alt="Connexion" />
+  <img src="docs/media/screenshots/02-participants.png" width="18%" alt="Participants" />
+  <img src="docs/media/screenshots/03-mode-auto.png" width="18%" alt="Mode auto" />
+  <img src="docs/media/screenshots/04-recording.png" width="18%" alt="Enregistrement" />
+  <img src="docs/media/screenshots/05-conversation.png" width="18%" alt="Conversation" />
+</div>
+
+> 🎠 Carrousel interactif disponible sur [mcdesmonteix.github.io/whisperbridge](https://mcdesmonteix.github.io/whisperbridge/#screenshots)
 
 ---
 
