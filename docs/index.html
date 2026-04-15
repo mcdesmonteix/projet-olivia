@@ -86,32 +86,37 @@
     <p class="screenshots-sub">Découvrez WhisperBridge en action</p>
 
     <div class="carousel-wrapper">
-      <!-- Flèche gauche -->
       <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
 
-      <!-- Mockup iPhone -->
-      <div class="iphone-mockup">
-        <div class="iphone-frame">
-          <div class="iphone-notch"></div>
-          <div class="iphone-screen">
-            <div class="iphone-slides" id="carouselSlides">
-              <img src="media/screenshots/01-connexion.png"  alt="Connexion" />
-              <img src="media/screenshots/02-participants.png" alt="Participants connectés" />
-              <img src="media/screenshots/03-mode-auto.png"  alt="Mode automatique" />
-              <img src="media/screenshots/04-recording.png"  alt="Enregistrement en cours" />
-              <img src="media/screenshots/05-conversation.png" alt="Conversation traduite" />
+      <div class="carousel-viewer">
+        <!-- Slide 0 : image hero plein format -->
+        <div class="slide-hero" id="slideHero">
+          <img src="media/screenshots/00-branding.png" alt="WhisperBridge en action" />
+        </div>
+
+        <!-- Slides 1-5 : mockup iPhone -->
+        <div class="iphone-mockup" id="phoneMockup" style="display:none">
+          <div class="iphone-frame">
+            <div class="iphone-notch"></div>
+            <div class="iphone-screen">
+              <div class="iphone-slides" id="carouselSlides">
+                <img src="media/screenshots/01-connexion.png"  alt="Connexion" />
+                <img src="media/screenshots/02-participants.png" alt="Participants connectés" />
+                <img src="media/screenshots/03-mode-auto.png"  alt="Mode automatique" />
+                <img src="media/screenshots/04-recording.png"  alt="Enregistrement en cours" />
+                <img src="media/screenshots/05-conversation.png" alt="Conversation traduite" />
+              </div>
             </div>
+            <div class="iphone-home-bar"></div>
           </div>
-          <div class="iphone-home-bar"></div>
         </div>
       </div>
 
-      <!-- Flèche droite -->
       <button class="carousel-arrow carousel-next" aria-label="Suivant">&#8250;</button>
     </div>
 
     <!-- Caption -->
-    <p class="carousel-caption" id="carouselCaption">Connexion en un clic, sans compte</p>
+    <p class="carousel-caption" id="carouselCaption">WhisperBridge — traduction vocale en temps réel</p>
 
     <!-- Dots -->
     <div class="carousel-dots" id="carouselDots">
@@ -120,6 +125,7 @@
       <button class="dot" data-index="2"></button>
       <button class="dot" data-index="3"></button>
       <button class="dot" data-index="4"></button>
+      <button class="dot" data-index="5"></button>
     </div>
   </section>
 
@@ -184,23 +190,38 @@ cd whisperbridge
 
     // Carrousel
     const captions = [
+      "WhisperBridge — traduction vocale en temps réel",
       "Connexion en un clic, sans compte",
       "Vos interlocuteurs apparaissent en temps réel",
       "Mode auto — parlez naturellement, WhisperBridge écoute",
       "Enregistrement en cours, traduction imminente",
       "Chaque message traduit instantanément dans les deux langues"
     ];
+    const TOTAL = captions.length;
+    const PHONE_SLIDES = TOTAL - 1; // 5 slides dans le téléphone
+
     let current = 0;
     let autoTimer;
-    const slides   = document.getElementById('carouselSlides');
-    const caption  = document.getElementById('carouselCaption');
-    const dots     = document.querySelectorAll('.dot');
+    const phoneSlides  = document.getElementById('carouselSlides');
+    const slideHero    = document.getElementById('slideHero');
+    const phoneMockup  = document.getElementById('phoneMockup');
+    const caption      = document.getElementById('carouselCaption');
+    const dots         = document.querySelectorAll('.dot');
 
     function goTo(n) {
-      current = (n + captions.length) % captions.length;
-      slides.style.transform = `translateX(-${current * 20}%)`;
+      current = (n + TOTAL) % TOTAL;
       caption.textContent = captions[current];
       dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+      if (current === 0) {
+        slideHero.style.display  = 'block';
+        phoneMockup.style.display = 'none';
+      } else {
+        slideHero.style.display  = 'none';
+        phoneMockup.style.display = 'block';
+        // Décale au bon slide dans le téléphone (index 1→0, 2→1, …)
+        phoneSlides.style.transform = `translateX(-${(current - 1) * (100 / PHONE_SLIDES)}%)`;
+      }
     }
 
     function startAuto() {
@@ -214,8 +235,9 @@ cd whisperbridge
 
     // Swipe tactile
     let touchStartX = 0;
-    slides.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    slides.addEventListener('touchend',   e => {
+    const viewer = document.querySelector('.carousel-viewer');
+    viewer.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    viewer.addEventListener('touchend',   e => {
       const dx = e.changedTouches[0].clientX - touchStartX;
       if (Math.abs(dx) > 40) { goTo(current + (dx < 0 ? 1 : -1)); startAuto(); }
     });
